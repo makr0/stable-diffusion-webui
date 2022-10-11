@@ -115,7 +115,7 @@ class GridAnnotation:
         self.size = None
 
 
-def draw_grid_annotations(im, width, height, hor_texts, ver_texts):
+def draw_grid_annotations(im, width, height, hor_texts, ver_texts, base_prompt):
     def wrap(drawing, text, font, line_length):
         lines = ['']
         for word in text.split():
@@ -136,12 +136,15 @@ def draw_grid_annotations(im, width, height, hor_texts, ver_texts):
             draw_y += line.size[1] + line_spacing
 
     fontsize = (width + height) // 25
+    fontsize_baseprompt=14
     line_spacing = fontsize // 2
 
     try:
         fnt = ImageFont.truetype(opts.font or Roboto, fontsize)
+        fnt_baseprompt = ImageFont.truetype(opts.font or Roboto, fontsize_baseprompt)
     except Exception:
         fnt = ImageFont.truetype(Roboto, fontsize)
+        fnt_baseprompt = ImageFont.truetype(Roboto, fontsize_baseprompt)
 
     color_active = (0, 0, 0)
     color_inactive = (153, 153, 153)
@@ -169,11 +172,14 @@ def draw_grid_annotations(im, width, height, hor_texts, ver_texts):
             bbox = calc_d.multiline_textbbox((0, 0), line.text, font=fnt)
             line.size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
 
+    bbox_prompt = calc_d.multiline_textbbox((0, 0), base_prompt, font=fnt_baseprompt)
+    bbox_prompt_size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
+
     hor_text_heights = [sum([line.size[1] + line_spacing for line in lines]) - line_spacing for lines in hor_texts]
     ver_text_heights = [sum([line.size[1] + line_spacing for line in lines]) - line_spacing * len(lines) for lines in
                         ver_texts]
 
-    pad_top = max(hor_text_heights) + line_spacing * 2
+    pad_top = max(hor_text_heights) + line_spacing * 3
 
     result = Image.new("RGB", (im.width + pad_left, im.height + pad_top), "white")
     result.paste(im, (pad_left, pad_top))
@@ -192,10 +198,12 @@ def draw_grid_annotations(im, width, height, hor_texts, ver_texts):
 
         draw_texts(d, x, y, ver_texts[row])
 
+    d.multiline_text((5, fontsize_baseprompt+2 ), base_prompt, font=fnt_baseprompt, fill=color_active, anchor="lm", align="left")
     return result
 
 
 def draw_prompt_matrix(im, width, height, all_prompts):
+    base_prompt = all_prompts[0]
     prompts = all_prompts[1:]
     boundary = math.ceil(len(prompts) / 2)
 
@@ -205,7 +213,7 @@ def draw_prompt_matrix(im, width, height, all_prompts):
     hor_texts = [[GridAnnotation(x, is_active=pos & (1 << i) != 0) for i, x in enumerate(prompts_horiz)] for pos in range(1 << len(prompts_horiz))]
     ver_texts = [[GridAnnotation(x, is_active=pos & (1 << i) != 0) for i, x in enumerate(prompts_vert)] for pos in range(1 << len(prompts_vert))]
 
-    return draw_grid_annotations(im, width, height, hor_texts, ver_texts)
+    return draw_grid_annotations(im, width, height, hor_texts, ver_texts, base_prompt)
 
 
 def resize_image(resize_mode, im, width, height):

@@ -172,7 +172,7 @@ def draw_xy_grid(p, xs, ys, x_labels, y_labels, cell, draw_legend):
 
     grid = images.image_grid(res, rows=len(ys))
     if draw_legend:
-        grid = images.draw_grid_annotations(grid, res[0].width, res[0].height, hor_texts, ver_texts)
+        grid = images.draw_grid_annotations(grid, res[0].width, res[0].height, hor_texts, ver_texts, p.prompt)
 
     first_processed.images = [grid]
 
