@@ -277,6 +277,7 @@ def train_hypernetwork(hypernetwork_name, learn_rate, data_root, log_directory, 
                 sd_model=shared.sd_model,
                 prompt=preview_text,
                 steps=20,
+                seed=42,
                 do_not_save_grid=True,
                 do_not_save_samples=True,
             )
