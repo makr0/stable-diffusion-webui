@@ -226,7 +226,7 @@ def draw_xy_grid(p, xs, ys, x_labels, y_labels, cell, draw_legend, include_lone_
 
     grid = images.image_grid(image_cache, rows=len(ys))
     if draw_legend:
-        grid = images.draw_grid_annotations(grid, cell_size[0], cell_size[1], hor_texts, ver_texts)
+        grid = images.draw_grid_annotations(grid, cell_size[0], cell_size[1], hor_texts, ver_texts, p.prompt)
 
     processed_result.images[0] = grid
 
