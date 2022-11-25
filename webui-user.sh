@@ -40,4 +40,7 @@ venv_dir="p3"
 #export CODEFORMER_COMMIT_HASH=""
 #export BLIP_COMMIT_HASH=""
 
+# Uncomment to enable accelerated launch
+#export ACCELERATE="True"
+
 ###########################################
