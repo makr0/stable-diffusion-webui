@@ -244,7 +244,27 @@ Steps: 20, Sampler: Euler a, CFG scale: 7, Seed: 965400086, Size: 512x512, Model
 
     done_with_prompt = False
 
-    *lines, lastline = x.strip().split("\n")
+    # remove "Template" and "Negative Template"
+    cleaned_lines = ""
+    raw_lines = x.strip().split("\n")
+    done_with_cleaning = False
+
+    for i, line in enumerate(raw_lines):
+        line = line.strip()
+        if line.startswith("Template:") or line.startswith("Negative Template:"):
+            done_with_cleaning = True
+        if not done_with_cleaning:
+            cleaned_lines += line + "\n" 
+
+
+    print("=======================\n")
+    print("raw_lines\n")
+    print(raw_lines)
+    print("=======================\n")
+    print("cleaned_lines\n")
+    print(cleaned_lines)
+
+    *lines, lastline = cleaned_lines.strip().split("\n")
     if not re_params.match(lastline):
         lines.append(lastline)
         lastline = ''
