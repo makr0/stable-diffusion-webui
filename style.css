@@ -84,7 +84,7 @@ div.compact{
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.gradio-dropdown .wrap-inner.wrap-inner.wrap-inner{
+.gradio-dropdown:not(.multiselect) .wrap-inner.wrap-inner.wrap-inner{
     flex-wrap: unset;
 }
 
@@ -318,6 +318,13 @@ div.dimensions-tools{
     min-height: 480px !important;
 }
 
+#img2img_sketch, #img2maskimg, #inpaint_sketch {
+    overflow: overlay !important;
+    resize: auto;
+    background: var(--panel-background-fill);
+    z-index: 5;
+}
+
 .image-buttons button{
     min-width: auto;
 }
@@ -329,6 +336,7 @@ div.dimensions-tools{
 /* settings */
 #quicksettings {
     width: fit-content;
+    align-items: end;
 }
 
 #quicksettings > div, #quicksettings > fieldset{
